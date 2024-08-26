@@ -8,7 +8,7 @@
 import UIKit
 import AVFoundation
 
-class OMVideoPlayerView: UIView {
+public class OMVideoPlayerView: UIView {
     
     var player: AVPlayer? {
         get {
@@ -30,6 +30,8 @@ class OMVideoPlayerView: UIView {
     func setup() {
         playerLayer.contentsGravity = .resizeAspectFill
         playerLayer.videoGravity = .resizeAspectFill
+//        playerLayer.cornerCurve = .continuous
+//        playerLayer.cornerRadius = 12
     }
         
     required init?(coder: NSCoder) {
@@ -41,7 +43,7 @@ class OMVideoPlayerView: UIView {
     }
     
     // Override UIView property
-    override static var layerClass: AnyClass {
+    public override static var layerClass: AnyClass {
         return AVPlayerLayer.self
     }
 }
