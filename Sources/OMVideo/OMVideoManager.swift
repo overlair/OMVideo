@@ -50,17 +50,21 @@ public class OMVideoManager: NSObject {
     
     public func load(_ item: AVPlayerItem, at time: Double? = nil) {
         pause()
-        view.isHidden = true
-        
+//        view.isHidden = true
+        if let time {
+            let seek = CMTime(seconds: time,
+                              preferredTimescale: item.duration.timescale)
+            item.seek(to: seek, completionHandler: nil)
+        }
         queuePlayer.replaceCurrentItem(with: item)
 //        self.looper = AVPlayerLooper(player: queuePlayer, templateItem: item)
 //        looper
-        if let time {
-            seek(toTime: time)
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.view.isHidden = false
-        }
+//        if let time {
+//            seek(toTime: time)
+//        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+//            self.view.isHidden = false
+//        }
 
     }
     
