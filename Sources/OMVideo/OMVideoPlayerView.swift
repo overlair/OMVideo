@@ -28,7 +28,7 @@ public class OMVideoPlayerView: UIView {
     }
     
     func setup() {
-        playerLayer.contentsGravity = .resizeAspect
+        playerLayer.contentsGravity = .center
         playerLayer.videoGravity = .resizeAspect
 //        playerLayer.cornerCurve = .continuous
 //        playerLayer.cornerRadius = 12
