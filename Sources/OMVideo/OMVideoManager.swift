@@ -53,8 +53,8 @@ public class OMVideoManager: NSObject {
         view.isHidden = true
         
         queuePlayer.replaceCurrentItem(with: item)
-        self.looper = AVPlayerLooper(player: queuePlayer, templateItem: item)
-        
+//        self.looper = AVPlayerLooper(player: queuePlayer, templateItem: item)
+//        looper
         if let time {
             seek(toTime: time)
         }
