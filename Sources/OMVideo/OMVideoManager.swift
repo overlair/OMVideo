@@ -37,7 +37,8 @@ public class OMVideoManager: NSObject {
     private var snapshotQueue = DispatchQueue(label: "videoPlayerSnapshots", qos: .userInteractive)
     private var videoQueue = DispatchQueue(label: "videoPlayerVideo", qos: .userInteractive)
 
-    private var queuePlayer = AVQueuePlayer(playerItem: nil)
+//    private var queuePlayer = AVQueuePlayer(playerItem: nil)
+    private var queuePlayer = AVPlayer(playerItem: nil)
     lazy var queueSeeker = AVPlayerSeeker(player: queuePlayer)
     
     private var looper: AVPlayerLooper? = nil
