@@ -70,11 +70,12 @@ public class OMVideoManager: NSObject {
 
     }
     
-    public override class func observeValue(forKeyPath keyPath: String?,
+    public override func observeValue(forKeyPath keyPath: String?,
                                             of object: Any?,
                                             change: [NSKeyValueChangeKey : Any]?,
                                             context: UnsafeMutableRawPointer?) {
-        if let player = object as? AVPlayer, keyPath == "status" {
+        guard object as AnyObject? === player else { return }
+        if keyPath == "status" {
             switch player.status {
             case .unknown:
                 print("unknown")
