@@ -25,6 +25,68 @@ public struct OMVideoPlayhead: Equatable {
 
 public class OMVideoManager: NSObject {
 
+    override init() {
+        super.init()
+        self.playerObserver = self.queuePlayer.observe(\.currentItem, options: [.new]) {
+            [weak self] (player, _) in
+            print("media item changed...")
+        }
+
+        // listening for current item status change
+        self.playerStatusObserver = self.queuePlayer.currentItem?.observe(\.status, options:  [.new, .old], changeHandler: {
+            (playerItem, change) in
+            if playerItem.status == .readyToPlay {
+                print("current item status is ready")
+            }
+        })
+
+        // listening for buffer is empty
+        self.playerBufferEmptyObserver = self.queuePlayer.currentItem?.observe(\.isPlaybackBufferEmpty, options: [.new]) {
+            [weak self] (_, _) in
+            print("buffering...")
+        }
+        // listening for event that buffer is almost full
+        self.playerBufferAlmostThereObserver = self.queuePlayer.currentItem?.observe(\.isPlaybackLikelyToKeepUp, options: [.new]) {
+            [weak self] (_, _) in
+            print("buffering ends...")
+        }
+
+        // listening for event that buffer is full
+        self.playerBufferFullObserver = self.queuePlayer.currentItem?.observe(\.isPlaybackBufferFull, options: [.new]) {
+            [weak self] (_, _) in
+            print("buffering is hidden...")
+        }
+
+        // listening for event about the status of the playback
+        self.playerStallObserver = self.queuePlayer.observe(\.timeControlStatus, options: [.new, .old], changeHandler: {
+            (playerItem, change) in
+            if #available(iOS 10.0, *) {
+                switch (playerItem.timeControlStatus) {
+                case AVPlayer.TimeControlStatus.paused:
+                    print("Media Paused")
+                case AVPlayer.TimeControlStatus.playing:
+                    print("Media Playing")
+                case AVPlayer.TimeControlStatus.waitingToPlayAtSpecifiedRate:
+                    print("Media Waiting to play at specific rate!")
+                }
+            }
+            else {
+                // Fallback on earlier versions
+            }
+        })
+
+        // listening for change event when player stops playback
+        self.playerWaitingObserver = self.queuePlayer.observe(\.reasonForWaitingToPlay, options: [.new, .old], changeHandler: {
+            (playerItem, change) in
+            if #available(iOS 10.0, *) {
+                print("REASON FOR WAITING TO PLAY: ", playerItem.reasonForWaitingToPlay?.rawValue as Any)
+            }
+            else {
+                // Fallback on earlier versions
+            }
+        })
+        
+    }
     public let isPlaying = CurrentValueSubject<Bool, Never>(false)
     public let playhead = CurrentValueSubject<OMVideoPlayhead, Never>(.init())
         
@@ -49,6 +111,17 @@ public class OMVideoManager: NSObject {
         queuePlayer.currentItem != nil
     }
     
+    
+    
+    var playerObserver: NSKeyValueObservation? = nil
+    var playerStatusObserver: NSKeyValueObservation? = nil
+    var playerBufferEmptyObserver: NSKeyValueObservation? = nil
+    var playerBufferAlmostThereObserver: NSKeyValueObservation? = nil
+    var playerBufferFullObserver: NSKeyValueObservation? = nil
+    var playerStallObserver: NSKeyValueObservation? = nil
+    var playerWaitingObserver: NSKeyValueObservation? = nil
+    
+    
     public func load(_ item: AVPlayerItem, at time: Double? = nil) {
         pause()
 //        view.isHidden = true
@@ -70,24 +143,7 @@ public class OMVideoManager: NSObject {
 
     }
     
-    public override func observeValue(forKeyPath keyPath: String?,
-                                            of object: Any?,
-                                            change: [NSKeyValueChangeKey : Any]?,
-                                            context: UnsafeMutableRawPointer?) {
-        guard object as AnyObject? === player else { return }
-        if keyPath == "status" {
-            switch player.status {
-            case .unknown:
-                print("unknown")
-            case .failed:
-                print("failed")
-            case .readyToPlay:
-                print("readyToPlay")
-            default:
-                break
-            }
-        }
-    }
+  
     
     public func play()  {
         
