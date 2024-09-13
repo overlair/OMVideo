@@ -25,7 +25,7 @@ public struct OMVideoPlayhead: Equatable {
 
 public class OMVideoManager: NSObject {
 
-    override init() {
+    public override init() {
         super.init()
         self.playerObserver = self.queuePlayer.observe(\.currentItem, options: [.new]) {
             [weak self] (player, _) in
