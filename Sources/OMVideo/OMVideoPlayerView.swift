@@ -19,7 +19,7 @@ public class OMVideoPlayerView: UIView {
         }
     }
  
-    init(player: AVPlayer) {
+    public init(player: AVPlayer) {
         super.init(frame: .zero)
         self.player = player
         self.backgroundColor = .black
@@ -34,7 +34,7 @@ public class OMVideoPlayerView: UIView {
 //        playerLayer.cornerRadius = 12
     }
         
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         fatalError("init coder was not implemented")
     }
     

@@ -18,6 +18,10 @@ public struct OMVideoState: Equatable {
 }
 
 public struct OMVideoPlayhead: Equatable {
+    public init(duration: CMTime = .zero, playhead: CMTime = .zero) {
+        self.duration = duration
+        self.playhead = playhead
+    }
     public var duration: CMTime = .zero
     public var playhead: CMTime = .zero
     public var percentage: Double { playhead.seconds / duration.seconds }
