@@ -130,7 +130,7 @@ public class OMVideoManager: NSObject {
                               preferredTimescale: item.duration.timescale)
             item.seek(to: seek, completionHandler: nil)
         }
-        queuePlayer.addObserver(self, forKeyPath:"status", options: [.old, .new], context: nil)
+//        queuePlayer.addObserver(self, forKeyPath:"status", options: [.old, .new], context: nil)
         queuePlayer.replaceCurrentItem(with: item)
 //        self.looper = AVPlayerLooper(player: queuePlayer, templateItem: item)
 //        looper
