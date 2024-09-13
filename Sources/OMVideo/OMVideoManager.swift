@@ -57,6 +57,7 @@ public class OMVideoManager: NSObject {
                               preferredTimescale: item.duration.timescale)
             item.seek(to: seek, completionHandler: nil)
         }
+        queuePlayer.addObserver(self, forKeyPath:"status", options: [.old, .new], context: nil)
         queuePlayer.replaceCurrentItem(with: item)
 //        self.looper = AVPlayerLooper(player: queuePlayer, templateItem: item)
 //        looper
@@ -67,6 +68,24 @@ public class OMVideoManager: NSObject {
 //            self.view.isHidden = false
 //        }
 
+    }
+    
+    public override class func observeValue(forKeyPath keyPath: String?,
+                                            of object: Any?,
+                                            change: [NSKeyValueChangeKey : Any]?,
+                                            context: UnsafeMutableRawPointer?) {
+        if let player = object as? AVPlayer, keyPath == "status" {
+            switch player.status {
+            case .unknown:
+                print("unknown")
+            case .failed:
+                print("failed")
+            case .readyToPlay:
+                print("readyToPlay")
+            default:
+                break
+            }
+        }
     }
     
     public func play()  {
